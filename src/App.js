@@ -1,23 +1,21 @@
-import logo from './logo.svg';
-import './App.css';
-
+import "./App.css";
+import { Routes, Route, Navigate } from "react-router-dom";
+import { useState } from "react";
+import Home from "./Component/Home";
+import DisplayRecords from "./Component/DisplayRecords";
+import { Context } from "./Context";
+import Sidebar from "./Component/Sidebar";
 function App() {
+  const [sideShow, setSideShow] = useState(false);
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Context.Provider value={[sideShow, setSideShow]}>
+        <Routes>
+          <Route path="/home" element={<Home />} />
+          <Route path="/displayRecords" element={<DisplayRecords />} />
+          <Route path="*" element={<Navigate to="/home" />} />
+        </Routes>
+      </Context.Provider>
     </div>
   );
 }

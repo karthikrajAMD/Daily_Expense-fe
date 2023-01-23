@@ -1,0 +1,30 @@
+:root {
+  --first-color: rgb(14, 97, 213);
+  --first-color-alt: rgb(140, 207, 255);
+}
+table,
+th,
+td {
+  border-collapse: collapse;
+}
+th,
+td {
+  text-align: center;
+  padding: 10px;
+  border-bottom: 1px solid black;
+  font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+    "Lucida Sans", Arial, sans-serif;
+  font-size: 18px;
+}
+th {
+  background-color: var(--first-color);
+}
+td {
+  background-color: var(--first-color-alt);
+}
+.Total-price {
+  font-weight: bold;
+}
+.totalPrice-table {
+  text-align: end;
+}

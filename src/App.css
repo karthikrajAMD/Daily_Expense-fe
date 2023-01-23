@@ -1,38 +1,90 @@
-.App {
-  text-align: center;
+/* /* * {
+  margin: 0;
+  padding: 0;
+} */
+:root {
+  --first-color: rgb(14, 97, 213);
+  --first-color-alt: rgb(140, 207, 255);
+  --white-color: #ddfcff;
+  /* -- */
 }
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.my-add-form {
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  align-items: center;
+}
+.add-form {
+  padding: 10px;
+  margin-top: 20px;
+  border-radius: 10px;
+  background: var(--first-color);
+  background: radial-gradient(
+    circle,
+    var(--first-color-alt) 0%,
+    var(--first-color-alt) 54%,
+    var(--first-color-alt) 100%
+  );
+  box-shadow: 10px 10px 20px black;
+  transition: all 0.5ms;
 }
 
-.App-link {
-  color: #61dafb;
+.record-heading {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-family: cursive;
+  color: var(--first-color);
+}
+.MyForm {
+  display: flex;
+  flex-direction: column;
+  width: 350px;
+  transition: all 0.5s;
+}
+@media (max-width: 520px) {
+  .MyForm {
+    width: auto;
+  }
+}
+@media (max-width: 300px) {
+  .MyForm {
+    width: 120px;
+  }
+}
+.MyForm label {
+  color: var(--first-color);
+  text-shadow: 1px 1px rgb(103, 151, 186);
+  font-family: "Times New Roman", Times, serif;
+
+  margin-bottom: 3px;
+  font-weight: bold;
+  font-size: 18px;
+  letter-spacing: 1px;
+}
+.MyForm input {
+  font-size: 18px;
+  color: rgb(57, 7, 132);
+  background-color: transparent;
+  border: 2px dotted var(--first-color);
+  border-top: none;
+  cursor: pointer;
+}
+.MyForm input:focus {
+  outline-width: 0.2rem;
+  outline-color: var(--first-color);
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.formik-error {
+  color: red;
+
+  font-family: Arial, Helvetica, sans-serif;
+}
+.formik-error::before {
+  content: "*";
+}
+#date,
+#time {
+  color: rgb(57, 7, 132);
+}
+.submit-button {
+  margin: 10px;
 }
