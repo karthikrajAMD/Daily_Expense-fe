@@ -1,7 +1,6 @@
-import React, { useState, useContext } from "react";
+import React, { useContext } from "react";
 import "../Sidebar.css";
 import { Link } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
 import { Context } from "../Context";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import LocalAtmIcon from "@mui/icons-material/LocalAtm";

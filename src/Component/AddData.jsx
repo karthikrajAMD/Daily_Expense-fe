@@ -4,7 +4,10 @@ import { useFormik } from "formik";
 import { env } from "../env";
 import axios from "axios";
 import Button from "react-bootstrap/Button";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 function AddData() {
+  const navigate = useNavigate();
   const formik = useFormik({
     initialValues: {
       date: "",
@@ -47,10 +50,18 @@ function AddData() {
       price: formik.values.price,
       totalPrice: formik.values.quantity * formik.values.price,
     });
+    if (res.data.statusCode === 200) {
+      toast.success(res.data.message);
+      setTimeout(() => {
+        navigate("/displayRecords");
+      }, 2000);
+    } else {
+      toast.error(res.data.message);
+      // formik();
+    }
   };
   // formik.values.totalPrice=formik.values.quantity*formik.values.price;
   const time = new Date(formik.values.time);
-  console.log(time);
   console.log(
     time.toTimeString({
       hour: "numeric",
