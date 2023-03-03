@@ -26,7 +26,7 @@ const Sidebar = () => {
             </Link>
 
             <div className="nav-list">
-              <Link to="/displayRecords" className="nav-link active">
+              <Link to="/displayRecords" className="nav-link">
                 {/* <i className="fas fa-tachometer-alt nav-link-icon"></i> */}
                 <LocalAtmIcon className="nav-link-icon" />
                 <span className="nav-link-name">Dashboard</span>

@@ -2,6 +2,7 @@
   margin: 0;
   padding: 0;
 } */
+@import url("https://fonts.googleapis.com/css2?family=Unbounded:wght@300;400&display=swap");
 :root {
   --first-color: rgb(14, 97, 213);
   --first-color-alt: rgb(140, 207, 255);
@@ -87,4 +88,18 @@
 }
 .submit-button {
   margin: 10px;
+}
+.my-search {
+  padding-top: 30px;
+  /* text-transform: uppercase; */
+  font-family: "Unbounded", cursive;
+}
+.food {
+  color: blue;
+}
+.place {
+  color: rgb(166, 0, 255);
+}
+.month {
+  color: rgb(255, 0, 255);
 }

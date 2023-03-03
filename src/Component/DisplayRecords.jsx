@@ -3,6 +3,8 @@ import React from "react";
 import { useEffect, useContext } from "react";
 import { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
+import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import { env } from "../env";
 import Loading from "./Loading";
 import Button from "react-bootstrap/Button";
@@ -14,8 +16,9 @@ import "jspdf-autotable";
 import "../Table.css";
 function DisplayRecords() {
   const [sideShow, setSideShow] = useContext(Context);
-  const [dailyRecords, setDailyRecords] = useState("");
+  const [dailyRecords, setDailyRecords] = useState();
   const [search, setSearch] = useState("");
+  const [sorted, setSorted] = useState({ sorted: "date", reversed: false });
   const [dateSearch, setDateSearch] = useState("");
   const [lastDateSearch, setLastDateSearch] = useState("");
   let hitDateMatches;
@@ -31,6 +34,7 @@ function DisplayRecords() {
         );
       };
       setDailyRecords(searchResult());
+      // setDailyRecords(res.data.MyRecords);
     } else {
       console.log(res.data.message);
     }
@@ -75,6 +79,25 @@ function DisplayRecords() {
       toast.success("Select date in range to download");
     }
   };
+
+  const sortByDate = () => {
+    const sortData = [...dailyRecords];
+    sortData.sort((date1, date2) => {
+      if (sorted.reversed) {
+        return date1.date.localeCompare(date2.date);
+      }
+      return date2.date.localeCompare(date1.date);
+    });
+    setDailyRecords(sortData);
+    setSorted({ sorted: "date", reversed: !sorted.reversed });
+  };
+
+  const renderArrow = () => {
+    if (sorted.reversed) {
+      return <ArrowUpwardIcon fontSize="large" />;
+    }
+    return <ArrowDownwardIcon fontSize="large" />;
+  };
   return (
     <>
       <main className={sideShow ? "space-toggle" : null}>
@@ -82,11 +105,19 @@ function DisplayRecords() {
         <div className="cont">
           <div>
             <div>
-              {/* <ColorSchemesExample /> */}
+              <h5 className="my-search">
+                Search by <span className="food">Food name</span> ,
+                <span className="place">Place name</span> ,
+                <span className="month">Month</span>.
+              </h5>
               <input
                 type="text"
-                placeholder="search.."
+                placeholder=" search...."
                 onChange={(e) => setSearch(e.target.value)}
+                // type="text"
+                // placeholder="Search"
+                // value={searchData}
+                // onChange={searchByPlaceName}
                 className="mb-3 mt-3"
               />
               <ToastContainer
@@ -126,7 +157,14 @@ function DisplayRecords() {
             {dailyRecords ? (
               <Table responsive>
                 <tr>
-                  <th>Date</th>
+                  <th
+                    onClick={() => {
+                      sortByDate();
+                    }}
+                  >
+                    <span style={{ marginRight: 10 }}>Date</span>
+                    {sorted.sorted === "date" ? renderArrow() : null}
+                  </th>
                   <th>Day</th>
                   <th>Month</th>
                   <th>Time</th>
