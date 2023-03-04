@@ -1,6 +1,7 @@
 import axios from "axios";
 import React from "react";
 import { useEffect, useContext } from "react";
+import ReactPaginate from "react-paginate";
 import { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
@@ -10,6 +11,7 @@ import Loading from "./Loading";
 import Button from "react-bootstrap/Button";
 import jsPDF from "jspdf";
 import Table from "react-bootstrap/Table";
+import _ from "lodash";
 import Sidebar from "./Sidebar";
 import { Context } from "../Context";
 import "jspdf-autotable";
@@ -21,7 +23,12 @@ function DisplayRecords() {
   const [sorted, setSorted] = useState({ sorted: "date", reversed: false });
   const [dateSearch, setDateSearch] = useState("");
   const [lastDateSearch, setLastDateSearch] = useState("");
+  const [paginatedData, setPaginatedData] = useState();
+  const [change, setChange] = useState();
+  const [items, setItems] = useState([]);
+
   let hitDateMatches;
+  let pageSize = 3;
   const loadData = async () => {
     let res = await axios.get(`${env.apiurl}/getRecords`);
     if (res.data.statusCode === 200) {
@@ -34,7 +41,7 @@ function DisplayRecords() {
         );
       };
       setDailyRecords(searchResult());
-      // setDailyRecords(res.data.MyRecords);
+      setPaginatedData(_(searchResult()).slice(0).take(pageSize).value());
     } else {
       console.log(res.data.message);
     }
@@ -42,6 +49,7 @@ function DisplayRecords() {
   useEffect(() => {
     loadData();
   }, [search]);
+  let pageCount = dailyRecords ? Math.ceil(dailyRecords.length / pageSize) : 0;
   useEffect(() => {}, [dateSearch, lastDateSearch]);
   const columns = [
     { title: "Date", field: "date" },
@@ -49,7 +57,7 @@ function DisplayRecords() {
     { title: "Month", field: "month" },
     { title: "Food Name", field: "foodName" },
     { title: "Place Name", field: "placeName" },
-    { title: "Quantity", field: "quantity", type: "numneric" },
+    { title: "Quantity", field: "quantity", type: "numeric" },
     { title: "Price per quantity", field: "price" },
     { title: "Total Price", field: "totalPrice" },
   ];
@@ -79,7 +87,7 @@ function DisplayRecords() {
       toast.success("Select date in range to download");
     }
   };
-
+  // const [ac, setAct] = useState("active");
   const sortByDate = () => {
     const sortData = [...dailyRecords];
     sortData.sort((date1, date2) => {
@@ -88,8 +96,11 @@ function DisplayRecords() {
       }
       return date2.date.localeCompare(date1.date);
     });
+
+    handlePageClick({ selected: pageCount - 1 });
     setDailyRecords(sortData);
     setSorted({ sorted: "date", reversed: !sorted.reversed });
+    setChange(true);
   };
 
   const renderArrow = () => {
@@ -97,6 +108,14 @@ function DisplayRecords() {
       return <ArrowUpwardIcon fontSize="large" />;
     }
     return <ArrowDownwardIcon fontSize="large" />;
+  };
+  const handlePageClick = async (data) => {
+    console.log(data);
+    let currentPage = data.selected + 1;
+    let startIndex = (currentPage - 1) * 3;
+    // console.log(startIndex);
+    let pageData = _(dailyRecords).slice(startIndex).take(pageSize).value();
+    setPaginatedData(pageData);
   };
   return (
     <>
@@ -114,11 +133,7 @@ function DisplayRecords() {
                 type="text"
                 placeholder=" search...."
                 onChange={(e) => setSearch(e.target.value)}
-                // type="text"
-                // placeholder="Search"
-                // value={searchData}
-                // onChange={searchByPlaceName}
-                className="mb-3 mt-3"
+                className="mb-3 mt-3 p-1"
               />
               <ToastContainer
                 position="top-right"
@@ -154,7 +169,7 @@ function DisplayRecords() {
                 />
               </div>
             </div>
-            {dailyRecords ? (
+            {paginatedData ? (
               <Table responsive>
                 <tr>
                   <th
@@ -175,7 +190,7 @@ function DisplayRecords() {
                   <th>Total Price</th>
                 </tr>
                 {/* <tbody> */}
-                {dailyRecords.map((n, i) => (
+                {paginatedData.map((n, i) => (
                   <tr key={i}>
                     <td>{n.date}</td>
                     <td>{n.day}</td>
@@ -183,7 +198,6 @@ function DisplayRecords() {
                     <td>
                       {n.expenseTime} {n.timeModulation}
                     </td>
-                    {/* <td></td> */}
                     <td>{n.foodName}</td>
                     <td>{n.placeName}</td>
                     <td>{n.quantity}</td>
@@ -202,12 +216,34 @@ function DisplayRecords() {
                     )}
                   </td>
                 </tr>
-                {/* </tbody> */}
               </Table>
             ) : (
               <Loading />
             )}
           </div>
+          {paginatedData ? (
+            <ReactPaginate
+              previousLabel={"previous"}
+              nextLabel={"next"}
+              breakLabel={"..."}
+              pageCount={pageCount}
+              marginPagesDisplayed={2}
+              pageRangeDisplayed={3}
+              onPageChange={handlePageClick}
+              containerClassName={"pagination justify-content-center"}
+              pageClassName={"page-item"}
+              pageLinkClassName={"page-link"}
+              previousClassName={"page-item"}
+              previousLinkClassName={"page-link"}
+              nextClassName={"page-item"}
+              nextLinkClassName={"page-link"}
+              breakClassName={"page-item"}
+              breakLinkClassName={"page-link"}
+              activeClassName={"active"}
+            />
+          ) : (
+            ""
+          )}
         </div>
       </main>
     </>
